@@ -1,0 +1,23 @@
+name: Deploy Docker Compose App
+
+on:
+  push:
+    branches:
+      - main  # Adjust the branch name as needed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      
+    - name: Install SSH key
+      uses: webfactory/ssh-agent@v0.5.4
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    
+    - name: SSH into server and deploy
+      run: |
+        ssh ubuntu@54.160.175.143 'cd /home/ubuntu/dockerclass && docker-compose up -d'
