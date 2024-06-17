@@ -1,27 +1,38 @@
-services:
-  app:
-    image: node:18-alpine
-    command: sh -c "yarn install && yarn run dev"
-    ports:
-      - 3000:3000
-    working_dir: /app
-    volumes:
-      - ./:/app
-    environment:
-      MYSQL_HOST: mysql
-      MYSQL_USER: root
-      MYSQL_PASSWORD: admin
-      MYSQL_DB: todos
+version: '3.8'
 
+services:
   mysql:
+    container_name: mysql
     image: mysql:8.0
     volumes:
       - todo-mysql-data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: admin
-      MYSQL_DATABASE: todos  
-      MYSQL_USER: root       
-      MYSQL_PASSWORD: admin  
+      MYSQL_DATABASE: todos
+    networks:
+      - nodesql
+
+  nodeapp:
+    container_name: nodeapp
+    image: node:18-alpine
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_USER: root
+      MYSQL_PASSWORD: admin
+      MYSQL_DB: todos
+    networks:
+      - nodesql
+    depends_on:
+      - mysql
+    command: sh -c "yarn install && yarn run dev"
+
+networks:
+  nodesql:
 
 volumes:
   todo-mysql-data:
