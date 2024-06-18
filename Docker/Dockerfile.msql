@@ -1,0 +1,7 @@
+FROM mysql/mysql-server:latest
+ENV MYSQL_USER=todo
+ENV MYSQL_PASSWORD=todo1234
+ENV MYSQL_DATABASE=tododb
+ENV MYSQL_ROOT_PASSWORD=todo
+ENV MYSQL_HOST: '%'
+# COPY

@@ -1,0 +1,48 @@
+# prettier-ignore
+services:
+  todo-mysql:
+    container_name: todo-mysql
+    build:
+      context: ./Docker
+      dockerfile: Dockerfile.msql
+    image: todo-mysql:1.0
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_USER: todo
+      MYSQL_PASSWORD: todo1234
+      MYSQL_DATABASE: tododb
+      MYSQL_ROOT_PASSWORD: todo
+      MYSQL_HOST: '%'
+    volumes:
+      - mysql_server_data:/var/lib/mysql
+
+  todo-server:
+    container_name: todo-server
+    build:
+      context: .
+      dockerfile: Docker/Dockerfile.node
+    image: todo-server:1.0
+    ports:
+      - 3000:3000
+    volumes:
+      - /app/node_modules
+      - ${PWD}/src:/app/src
+      - ${PWD}/spec:/app/spec
+    depends_on:
+      - todo-mysql
+  
+  todo-proxy:
+    container_name: todo-proxy
+    build:
+      context: ./Docker
+      dockerfile: Dockerfile.proxy
+    image: todo-proxy:1.0
+    ports:
+      - 80:80
+    depends_on:
+      - todo-mysql
+      - todo-server
+
+volumes:
+  mysql_server_data:
