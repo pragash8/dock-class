@@ -13,7 +13,7 @@ services:
       MYSQL_PASSWORD: todo1234
       MYSQL_DATABASE: tododb
       MYSQL_ROOT_PASSWORD: todo
-      MYSQL_HOST: '%'
+      
     volumes:
       - mysql_server_data:/var/lib/mysql
 
